@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:接口的全路径 -->
+<mapper namespace="com.xbboom.dao.XbDao">
+	<select id="test" resultType="int">
+		select count(*) from test;
+	</select>
+	<!-- <select id="count" resultType="int"> select count(*) from admin; </select> 
+		<select id="findAd" parameterType="int" resultType="com.free.pojo.Admin"> 
+		select * from admin order by aid limit #{page},10; </select> <insert id="add" 
+		parameterType="com.free.pojo.Admin"> insert into admin (aname,apwd) values(#{aname},#{apwd}); 
+		</insert> 修改 <update id="updateNp" parameterType="com.free.pojo.Admin"> update 
+		admin set aname=#{aname},apwd=#{apwd} where aid=#{aid}; </update> 删除 <delete 
+		id="deleteNp" parameterType="int"> delete from admin where aid=#{aid}; </delete> -->
+
+	<select id="findGoodsById" resultType="Map" parameterType="int">
+		select * from goods_information where ID = #{id};
+	</select>
+	<select id="goodsList"
+		resultType="com.xbboom.bean.Goods_information">
+		select
+		ID,
+		NAME,
+		PRICE,
+		IMG,
+		PACKAGE_INGREDIENTS,
+		TYPES,
+		NUM,
+		INGREDIENTS,
+		CREATE_NAME,
+		CREATE_TIME,
+		UPDATE_NAME,
+		UPDATE_TIME,
+		introduce,
+		STANDBY2,
+		STANDBY3,
+		STANDBY4,
+		STANDBY5,
+		STANDBY6,
+		STANDBY7,
+		STANDBY8,
+		STANDBY9,
+		STANDBY10
+		from goods_information
+		<where>
+			1=1
+			<if test="goods_information.name != null">
+				AND NAME like #{name}
+			</if>
+			<if
+				test="goods_information.price != null and goods_information.price!=0.0">
+				AND PRICE like #{price}
+			</if>
+			<if test="goods_information.package_Ingredients != null">
+				AND PACKAGE_INGREDIENTS like #{package_Ingredients}
+			</if>
+			<if test="goods_information.ingredients != null">
+				AND INGREDIENTS like #{ingredients}
+			</if>
+		</where>
+		order by CREATE_TIME desc
+		limit #{row}, #{column};
+	</select>
+	<select id="countGoods" resultType="int">
+		select count(*) from goods_information
+		<where>
+			<if test="goods_information.name != null">
+				AND NAME like #{name}
+			</if>
+			<if
+				test="goods_information.price != null and goods_information.price!=0.0">
+				AND PRICE like #{price}
+			</if>
+			<if test="goods_information.package_Ingredients != null">
+				AND PACKAGE_INGREDIENTS like #{package_Ingredients}
+			</if>
+			<if test="goods_information.ingredients != null">
+				AND INGREDIENTS like #{ingredients}
+			</if>
+		</where>
+	</select>
+	<select id="findAddrByD" parameterType="int" resultType="Map">
+		select *
+		from ADDRESS_INFORMATION where USER_ID = #{openid} and DEFAULT_D=1
+	</select>
+	<insert id="goodsAdd"
+		parameterType="com.xbboom.bean.Goods_information">
+		insert into GOODS_INFORMATION
+		(NAME,PRICE,IMG,PACKAGE_INGREDIENTS,TYPES,NUM,INGREDIENTS,CREATE_TIME,introduce)values(#{name},#{price},#{img},
+		#{package_Ingredients},#{types},#{num},#{ingredients},#{create_Time},#{introduce})
+	</insert>
+
+	<update id="goodsUpdate"
+		parameterType="com.xbboom.bean.Goods_information">
+		update GOODS_INFORMATION set
+		NAME=#{name},PRICE=#{price},IMG=#{img}
+		,PACKAGE_INGREDIENTS=#{package_Ingredients}, TYPES=#{types}, introduce=#{introduce} where ID =
+		#{id};
+	</update>
+
+	<delete id="goodsDelete" parameterType="int">
+		delete from
+		GOODS_INFORMATION where id=#{id};
+	</delete>
+	<select id="addressList" resultType="Map">
+		select
+		ID,
+		USER_ID,
+		NAME,
+		ADD_RESS,
+		GENDER,
+		PHONE,
+		LABEL,
+		DEFAULT_D,
+		DOOR,
+		CREATE_TIME,
+		CREATE_NAME,
+		UPDATE_NAME,
+		UPDATE_TIME,
+		STANDBY1,
+		STANDBY2,
+		STANDBY3,
+		STANDBY4,
+		STANDBY5
+		from ADDRESS_INFORMATION
+		where USER_ID=#{openId} and
+		DEFAULT_D!=3 order
+		by DEFAULT_D,CREATE_TIME desc
+		limit #{row},
+		#{column};
+	</select>
+	<insert id="addressAdd"
+		parameterType="com.xbboom.bean.Address_information">
+		insert into ADDRESS_INFORMATION
+		(USER_ID,NAME,ADD_RESS,GENDER,PHONE,LABEL,CREATE_TIME,DEFAULT_D,DOOR)values(#{userId},#{name},#{addTess},
+		#{gender},#{phone},#{label},#{createTime},1,#{door})
+	</insert>
+
+	<update id="addressUpdate"
+		parameterType="com.xbboom.bean.Address_information">
+		update ADDRESS_INFORMATION set
+		NAME=#{name},ADD_RESS=#{addTess},PHONE=#{phone} where ID = #{id};
+	</update>
+	<update id="addressDelete" parameterType="int">
+		update
+		ADDRESS_INFORMATION set DEFAULT_D=1 where ID=#{id}
+	</update>
+	<update id="updateAddr" parameterType="int">
+		update ADDRESS_INFORMATION
+		set DEFAULT_D=#{defaultD} where USER_ID=#{userId}
+	</update>
+	<delete id="delAddr" parameterType="int">
+		delete from
+		address_information where ID = #{id}
+	</delete>
+	<select id="userList"
+		resultType="com.xbboom.bean.User_personal_information">
+		select
+		ID,
+		NAME,
+		PORTRAIT,
+		NICK_NAME,
+		GENDER,
+		CREATE_NAME,
+		UPDATE_NAME,
+		UPDATE_TIME,
+		STANDBY1,
+		STANDBY2,
+		STANDBY3,
+		STANDBY4,
+		STANDBY5
+		from
+		user_personal_information
+		where ID=#{id}
+	</select>
+	<insert id="userAdd"
+		parameterType="com.xbboom.bean.User_personal_information">
+		insert into user_personal_information
+		(ID,NAME,PORTRAIT,NICK_NAME,CREATE_TIME,GENDER)values(#{id},#{name},#{portrait},#{nickName},#{createTime},
+		#{gender})
+	</insert>
+
+	<update id="userUpdate"
+		parameterType="com.xbboom.bean.User_personal_information">
+		update user_personal_information set
+		NAME=#{name},ADD_RESS=#{portrait},GENDER=#{nickName},PHONE=#{gender};
+	</update>
+
+	<insert id="insertType" parameterType="Map">
+		insert into types
+		(types,px) values (#{types},#{px})
+	</insert>
+	<select id="findTypes" resultType="Map">
+		select * from types;
+	</select>
+	<update id="updateTypes" parameterType="Map">
+		update types set
+		types=#{types},px=#{px} where id =#{id};
+	</update>
+	<delete id="delTypes" parameterType="int">
+		delete from types where id=
+		#{id}
+	</delete>
+
+
+	<insert id="insertOrder" parameterType="com.xbboom.bean.Orders">
+		insert into orders
+		(ordernum,goods,price,pei,canhe,dates,status,addr,phone,name,types,openid,bz)
+		values
+		(#{ordernum},#{goods},#{price},#{pei},#{canhe},#{dates},#{status},#{addr},#{phone},#{name},#{types},#{openid},#{bz})
+	</insert>
+	<select id="fenyeOrder" parameterType="Map"
+		resultType="com.xbboom.bean.Orders">
+		select * from orders
+		<where>
+			status!=0 and status!=5 
+			<if test="status != 8 and status!=7">
+				and status=#{status}
+			</if>
+			<if test="status == 7">
+				and status!=4
+			</if>
+			and dates like #{dates}
+		</where>
+		order by dates desc limit #{start},#{end};
+	</select>
+	<update id="updateOrderStatus"
+		parameterType="com.xbboom.bean.Orders">
+		update orders set status=#{status} where ordernum =
+		#{ordernum};
+	</update>
+	<select id="countOrder" parameterType="Map" resultType="int">
+		select count(*) from orders
+		<where>
+			status!=0 and status!=5 
+			<if test="status != 8 and status!=7">
+				and status=#{status}
+			</if>
+			<if test="status == 7">
+				and status!=4
+			</if> 
+			and dates like #{dates}
+		</where>
+		;
+
+	</select>
+	<select id="findOrderByOpenid" parameterType="String"
+		resultType="com.xbboom.bean.Orders">
+		select * from orders where openid = #{openid} order by
+		dates desc;
+	</select>
+	<select id="findOrderByOrderNum" parameterType="String"
+		resultType="com.xbboom.bean.Orders">
+		select * from orders where ordernum=#{ordernum} order by
+		dates desc;
+	</select>
+
+	<insert id="insertYorder" parameterType="com.xbboom.bean.Yorder">
+		insert into yorder
+		(ordernum,dates,status,addr,addrphone,addrname,name,openid,bz,num)
+		values
+		(#{ordernum},#{dates},#{status},#{addr},#{addrphone},#{addrname},#{name},#{openid},#{bz},#{num})
+	</insert>
+	<update id="updateYorder" parameterType="com.xbboom.bean.Yorder">
+		update yorder set
+		status=#{status},goods=#{goods},tips=#{tips},price=#{price},pei=#{pei},canhe=#{canhe}
+		where ordernum = #{ordernum};
+	</update>
+	<update id="updateYstatus"
+		parameterType="com.xbboom.bean.Yorder">
+		update yorder set status=#{status} where ordernum =
+		#{ordernum};
+	</update>
+	<select id="fenyeYorder" parameterType="Map"
+		resultType="com.xbboom.bean.Yorder">
+		select * from yorder
+		<where>
+			1=1
+			<if test="status != 8">
+				and status=#{status}
+			</if>
+		</where>
+		order by dates desc limit #{start},#{end};
+	</select>
+	<select id="countYorder" parameterType="Map" resultType="int">
+		select count(*) from yorder
+		<where>
+			1=1
+			<if test="status != 8">
+				and status=#{status}
+			</if>
+		</where>;
+	</select>
+	<select id="findYorderByOpenid" parameterType="String"
+		resultType="com.xbboom.bean.Yorder">
+		select * from yorder where openid=#{openid} order by dates
+		desc;
+	</select>
+	<select id="findYorderByOrdernum" parameterType="String"
+		resultType="com.xbboom.bean.Yorder">
+		select * from yorder where ordernum=#{ordernum};
+	</select>
+	<insert id="insertAdmin" parameterType="com.xbboom.bean.Admin">
+		insert into admin
+		(name,phone,pwd,types) values
+		(#{name},#{phone},#{pwd},#{types})
+	</insert>
+	<update id="updateAdmin" parameterType="com.xbboom.bean.Admin">
+		update admin set
+		name=#{name},pwd=#{pwd},phone=#{phone},types=#{types} where
+		id = #{id};
+	</update>
+	<select id="fenyeAdmin" parameterType="Map" resultType="Map">
+		select *
+		from admin order by id desc limit #{start},#{end};
+	</select>
+	<select id="countAdmin" parameterType="Map" resultType="int">
+		select
+		count(*) from admin;
+	</select>
+	<select id="findAdminById" parameterType="int"
+		resultType="com.xbboom.bean.Admin">
+		select * from admin where id = #{id};
+	</select>
+	<select id="findAdminByPhone" parameterType="String"
+		resultType="com.xbboom.bean.Admin">
+		select * from admin where phone = #{phone};
+	</select>
+	<delete id="delAdmin" parameterType="int">
+		delete from admin where id=
+		#{id}
+	</delete>
+	<select id="adminLogin" parameterType="com.xbboom.bean.Admin"
+		resultType="com.xbboom.bean.Admin">
+		select * from admin where phone=#{phone} and pwd=#{pwd};
+	</select>
+	<update id="updateGoodsNum" parameterType="Map">
+		update
+		goods_information set NUM=#{num} where ID = #{id} and NUM = #{nums};
+	</update>
+
+	<select id="findInfo" resultType="Map">
+		select * from info;
+	</select>
+
+	<update id="update" parameterType="Map">
+		update info set
+		addr=#{addr},times=#{times},tel=#{tel},gonggao=#{gonggao};
+	</update>
+	<insert id="insertTypeGood" parameterType="Map">
+		insert into type_goods
+		(tid,gid) values (#{tid},#{gid})
+	</insert>
+	<select id="findTypeGood" parameterType="Map" resultType="Map">
+		select g.*,t.id as tid,t.types as ttypes,tg.* from goods_information
+		g,types t,type_goods tg
+		<where>
+			tg.tid=t.id and tg.gid=g.ID
+			<if test="status!=8">
+				and tg.status=1
+			</if>
+			<if test="tid!=8">
+				and tg.tid=#{tid}
+			</if>
+		</where>
+		order by tg.tgid
+		limit #{start},#{end};
+	</select>
+	<select id="countfindTypeGood" parameterType="Map"
+		resultType="int">
+		select count(*) from goods_information g,types t,type_goods tg
+		<where>
+			tg.tid=t.id and tg.gid=g.ID
+			<if test="status!=8">
+				and tg.status=1
+			</if>
+			<if test="tid!=8">
+				and tg.tid=#{tid}
+			</if>
+		</where>;
+	</select>
+	<delete id="delTypeGood" parameterType="int">
+		delete from type_goods
+		where tgid= #{id}
+	</delete>
+	<select id="countTG" parameterType="Map" resultType="int">
+		select count(*) from type_goods where tid=#{tid} and gid=#{gid};
+	</select>
+	
+	<update id="updateTypeGood" parameterType="Map">
+		update type_goods set
+		status=#{status} where tgid=#{id};
+	</update>
+	<delete id="delOrderById" parameterType="int">
+		delete from orders
+		where id= #{id}
+	</delete>
+	<select id="findAllOrderUseExcel" resultType="com.xbboom.bean.Orders">
+		select * from orders where dates like #{dates} and status!=0 and status!=5 and status!=6 order by dates desc;
+	</select>
+	
+	<update id="updateJieshao" parameterType="Map">
+		update jishao set
+		name=#{name},img=#{img} where id=1;
+	</update>
+	<select id="findJisahao" resultType="Map">
+		select * from jishao where id=1;
+	</select>
+</mapper>
